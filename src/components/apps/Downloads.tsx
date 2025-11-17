@@ -29,25 +29,14 @@ export const Downloads = () => {
   }, []);
 
   const handleRunInstaller = (installer: Installer) => {
-    toast.loading(`Installing ${installer.appName}...`);
-    
-    setTimeout(() => {
-      // Add to installed apps
-      const installed = JSON.parse(localStorage.getItem('urbanshade_installed_apps') || '[]');
-      if (!installed.includes(installer.appId)) {
-        installed.push(installer.appId);
-        localStorage.setItem('urbanshade_installed_apps', JSON.stringify(installed));
-      }
-      
-      // Remove installer
-      const newInstallers = installers.filter(i => i.id !== installer.id);
-      setInstallers(newInstallers);
-      localStorage.setItem('downloads_installers', JSON.stringify(newInstallers));
-      
-      toast.dismiss();
-      toast.success(`${installer.appName} installed successfully!`);
-      window.dispatchEvent(new Event('storage'));
-    }, 2000);
+    // Open GenericInstaller window
+    window.dispatchEvent(new CustomEvent('open-app', { 
+      detail: { 
+        appId: 'generic-installer',
+        appName: installer.appName,
+        installerId: installer.id
+      } 
+    }));
   };
 
   const handleDelete = (installerId: string) => {

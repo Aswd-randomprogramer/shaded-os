@@ -249,24 +249,34 @@ export const RoomEditor = ({ room, open, onClose, onSave }: RoomEditorProps) => 
           </div>
 
           {/* Custom Shape Editor */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <Label>Custom Shape Editor</Label>
+          <div className="bg-muted/30 p-4 rounded-lg border border-border/50 animate-fade-in">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <Label className="text-base font-semibold flex items-center gap-2">
+                  <Grid3x3 className="w-4 h-4 text-primary" />
+                  Custom Shape Editor
+                </Label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Create L-shapes, T-shapes, or completely custom layouts
+                </p>
+              </div>
               <Button 
                 size="sm" 
                 variant={shapeEditMode ? "default" : "outline"}
                 onClick={() => setShapeEditMode(!shapeEditMode)}
+                className="hover-scale"
               >
-                <Grid3x3 className="w-4 h-4 mr-1" />
-                {shapeEditMode ? "Exit Shape Editor" : "Edit Shape"}
+                {shapeEditMode ? "Exit Editor" : "Edit Shape"}
               </Button>
             </div>
             {shapeEditMode && (
-              <ShapeEditor
-                gridSize={12}
-                initialShape={editedRoom.gridShape}
-                onShapeChange={handleShapeChange}
-              />
+              <div className="animate-fade-in">
+                <ShapeEditor
+                  gridSize={12}
+                  initialShape={editedRoom.gridShape}
+                  onShapeChange={handleShapeChange}
+                />
+              </div>
             )}
           </div>
 
