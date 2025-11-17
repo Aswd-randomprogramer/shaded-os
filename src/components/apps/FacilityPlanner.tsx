@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
-import { getRoomBackgroundColor } from "@/lib/roomColors";
+import { getRoomBackgroundColor, getRoomColor } from "@/lib/roomColors";
 
 interface PlannerRoom {
   id: string;
@@ -34,6 +34,8 @@ interface HallwaySegment {
 
 export const FacilityPlanner = () => {
   const [rooms, setRooms] = useState<PlannerRoom[]>(() => loadState('facility_planner_rooms', []));
+  const [history, setHistory] = useState<PlannerRoom[][]>([loadState('facility_planner_rooms', [])]);
+  const [historyIndex, setHistoryIndex] = useState(0);
   const [mode, setMode] = useState<"facility" | "room-editor" | "hallway">("facility");
   const [editingRoomId, setEditingRoomId] = useState<string | null>(null);
   const [roomEditorGrid, setRoomEditorGrid] = useState<boolean[][]>([]);
@@ -67,6 +69,30 @@ export const FacilityPlanner = () => {
   useEffect(() => {
     saveState('facility_planner_rooms', rooms);
   }, [rooms]);
+
+  const addToHistory = (newRooms: PlannerRoom[]) => {
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(newRooms);
+    if (newHistory.length > 50) newHistory.shift(); // Keep only last 50 states
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  };
+
+  const undo = () => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
+      setRooms(history[historyIndex - 1]);
+      toast.success("Undone");
+    }
+  };
+
+  const redo = () => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1);
+      setRooms(history[historyIndex + 1]);
+      toast.success("Redone");
+    }
+  };
 
   useEffect(() => {
     saveState('facility_planner_hallways', hallwaySegments);
@@ -116,6 +142,28 @@ export const FacilityPlanner = () => {
     if (isPanning || e.button === 2 || e.shiftKey) return;
 
     const { x, y } = getCanvasCoordinates(e);
+
+    // Place room mode
+    if (placingRoomType) {
+      const newRoom: PlannerRoom = {
+        id: Date.now().toString(),
+        name: `${placingRoomType} ${rooms.length + 1}`,
+        type: placingRoomType,
+        x: snapValue(x),
+        y: snapValue(y),
+        width: 120,
+        height: 80,
+        sections: [],
+        doors: [],
+        connections: [],
+      };
+      const newRooms = [...rooms, newRoom];
+      setRooms(newRooms);
+      addToHistory(newRooms);
+      setPlacingRoomType(null);
+      toast.success(`${placingRoomType} placed`);
+      return;
+    }
 
     if (mode === "hallway") {
       const clickedRoom = rooms.find(room => 
@@ -209,11 +257,16 @@ export const FacilityPlanner = () => {
   };
 
   const handleRoomMouseUp = () => {
+    if (draggingRoom) {
+      addToHistory(rooms);
+    }
     setDraggingRoom(null);
   };
 
   const deleteRoom = (roomId: string) => {
-    setRooms(rooms.filter(r => r.id !== roomId));
+    const newRooms = rooms.filter(r => r.id !== roomId);
+    setRooms(newRooms);
+    addToHistory(newRooms);
     if (selectedRoomId === roomId) setSelectedRoomId(null);
     toast.success("Room deleted");
   };
@@ -328,9 +381,16 @@ export const FacilityPlanner = () => {
             size="sm"
             variant={mode === "facility" ? "default" : "outline"}
             onClick={() => setMode("facility")}
+            className="hover-scale"
           >
             <Eye className="w-4 h-4 mr-1" />
             Facility View
+          </Button>
+          <Button size="sm" onClick={undo} disabled={historyIndex === 0} className="hover-scale">
+            Undo
+          </Button>
+          <Button size="sm" onClick={redo} disabled={historyIndex === history.length - 1} className="hover-scale">
+            Redo
           </Button>
           <Button
             size="sm"
@@ -477,22 +537,25 @@ export const FacilityPlanner = () => {
             const renderCustomShape = () => {
               if (!room.gridShape) return null;
               const cellSize = 10;
-              return (
-                <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
-                  {room.gridShape.map((cell, idx) => (
-                    <rect
-                      key={idx}
-                      x={cell.col * cellSize}
-                      y={cell.row * cellSize}
-                      width={cellSize}
-                      height={cellSize}
-                      fill={getRoomBackgroundColor(room.type)}
-                      stroke="hsl(var(--border))"
-                      strokeWidth="0.5"
-                    />
-                  ))}
-                </svg>
-              );
+              
+              // Calculate bounds
+              const minRow = Math.min(...room.gridShape.map(c => c.row));
+              const maxRow = Math.max(...room.gridShape.map(c => c.row));
+              const minCol = Math.min(...room.gridShape.map(c => c.col));
+              const maxCol = Math.max(...room.gridShape.map(c => c.col));
+              
+              return room.gridShape.map((cell, idx) => (
+                <rect
+                  key={idx}
+                  x={room.x + (cell.col - minCol) * cellSize}
+                  y={room.y + (cell.row - minRow) * cellSize}
+                  width={cellSize}
+                  height={cellSize}
+                  fill={getRoomBackgroundColor(room.type, 0.3)}
+                  stroke={getRoomColor(room.type)}
+                  strokeWidth="1"
+                />
+              ));
             };
 
             return (

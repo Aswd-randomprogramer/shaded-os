@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import { Download, Package } from "lucide-react";
 import { Taskbar } from "./Taskbar";
 import { DesktopIcon } from "./DesktopIcon";
 import { StartMenu } from "./StartMenu";
 import { WindowManager } from "./WindowManager";
 import { RecoveryMode } from "./RecoveryMode";
-import { FileText, Database, Activity, Radio, FileBox, AlertTriangle, Terminal, Users, Wifi, Cpu, Mail, Globe, Music, Camera, Shield, MapPin, BookOpen, Zap, Wind, Calculator as CalcIcon, Lock, FileWarning, Grid3x3, ShoppingBag, StickyNote, Palette, Volume2, CloudRain, Clock as ClockIcon, Calendar, Newspaper, Key, HardDrive, FileArchive, FileText as PdfIcon, Sheet, Presentation, Video, Image, Mic, Gamepad2, MessageSquare, VideoIcon, MailOpen, FolderUp, TerminalSquare, Network, HardDrive as DiskIcon, Settings as SettingsIcon, Activity as PerformanceIcon, ScanLine, Languages, BookOpenCheck, Globe2, MapPinned, Telescope, Beaker, Calculator as PhysicsIcon, Fingerprint, Lock as EncryptionIcon, KeyRound, Download, Puzzle, Skull } from "lucide-react";
+import { FileText, Database, Activity, Radio, FileBox, AlertTriangle, Terminal, Users, Wifi, Cpu, Mail, Globe, Music, Camera, Shield, MapPin, BookOpen, Zap, Wind, Calculator as CalcIcon, Lock, FileWarning, Grid3x3, ShoppingBag, StickyNote, Palette, Volume2, CloudRain, Clock as ClockIcon, Calendar, Newspaper, Key, HardDrive, FileArchive, FileText as PdfIcon, Sheet, Presentation, Video, Image, Mic, Gamepad2, MessageSquare, VideoIcon, MailOpen, FolderUp, TerminalSquare, Network, HardDrive as DiskIcon, Settings as SettingsIcon, Activity as PerformanceIcon, ScanLine, Languages, BookOpenCheck, Globe2, MapPinned, Telescope, Beaker, Calculator as PhysicsIcon, Fingerprint, Lock as EncryptionIcon, KeyRound, Puzzle, Skull } from "lucide-react";
 
 export interface App {
   id: string;
@@ -29,6 +30,27 @@ export const Desktop = ({ onLogout, onReboot, onCriticalKill, onOpenAdminPanel, 
     const installed = localStorage.getItem('urbanshade_installed_apps');
     return installed ? JSON.parse(installed) : [];
   });
+
+  useEffect(() => {
+    const handleOpenApp = (e: CustomEvent) => {
+      if (e.detail.appId === 'generic-installer') {
+        (window as any).currentInstallerData = {
+          appName: e.detail.appName,
+          installerId: e.detail.installerId
+        };
+        const installerApp = {
+          id: 'generic-installer',
+          name: `Installing ${e.detail.appName}`,
+          icon: <Download className="w-11 h-11" />,
+          run: () => {}
+        };
+        openWindow(installerApp);
+      }
+    };
+    
+    window.addEventListener('open-app' as any, handleOpenApp as any);
+    return () => window.removeEventListener('open-app' as any, handleOpenApp as any);
+  }, []);
 
   const openWindow = (app: App) => {
     const existing = windows.find(w => w.id === app.id);

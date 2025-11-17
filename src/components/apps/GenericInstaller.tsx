@@ -4,10 +4,11 @@ import { toast } from "sonner";
 
 interface GenericInstallerProps {
   appName?: string;
+  installerId?: string;
   onComplete?: () => void;
 }
 
-export const GenericInstaller = ({ appName = "Application", onComplete }: GenericInstallerProps) => {
+export const GenericInstaller = ({ appName = "Application", installerId, onComplete }: GenericInstallerProps) => {
   const [stage, setStage] = useState<"welcome" | "options" | "installing" | "complete">("welcome");
   const [progress, setProgress] = useState(0);
   const [installLocation, setInstallLocation] = useState("C:\\Program Files\\");
@@ -36,9 +37,35 @@ export const GenericInstaller = ({ appName = "Application", onComplete }: Generi
   };
 
   const handleFinish = () => {
-    if (pinToStart) {
-      toast.success(`${appName} pinned to Start Menu`);
+    // Get installer info
+    const installers = JSON.parse(localStorage.getItem('downloads_installers') || '[]');
+    const installer = installers.find((i: any) => i.id === installerId);
+    
+    if (installer) {
+      // Add to installed apps
+      const installed = JSON.parse(localStorage.getItem('urbanshade_installed_apps') || '[]');
+      if (!installed.includes(installer.appId)) {
+        installed.push(installer.appId);
+        localStorage.setItem('urbanshade_installed_apps', JSON.stringify(installed));
+      }
+      
+      // Handle pinning
+      if (pinToStart) {
+        const pinned = JSON.parse(localStorage.getItem('pinned_apps') || '[]');
+        if (!pinned.includes(installer.appId)) {
+          pinned.push(installer.appId);
+          localStorage.setItem('pinned_apps', JSON.stringify(pinned));
+        }
+        toast.success(`${appName} pinned to Start Menu`);
+      }
+      
+      // Remove installer
+      const newInstallers = installers.filter((i: any) => i.id !== installerId);
+      localStorage.setItem('downloads_installers', JSON.stringify(newInstallers));
+      
+      window.dispatchEvent(new Event('storage'));
     }
+    
     onComplete?.();
   };
 
