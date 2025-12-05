@@ -178,6 +178,21 @@ export const CrashScreen = ({
           <p className="text-2xl leading-relaxed">
             {resolvedCrashData.description || stopInfo.description}
           </p>
+          
+          {/* Honest explanation */}
+          <div className="bg-white/10 border border-white/20 rounded-lg p-4 max-w-2xl">
+            <p className="text-base leading-relaxed opacity-90">
+              <span className="font-semibold text-yellow-200">This is a real error, not a simulation.</span>
+              <br />
+              Something went wrong — either an action triggered an unhandled exception, 
+              or there's a bug in the system that needs fixing. We're sorry for the inconvenience.
+              <br /><br />
+              <span className="opacity-70 text-sm">
+                If this keeps happening, try accessing Recovery Mode on next boot or report the issue.
+              </span>
+            </p>
+          </div>
+          
           <p className="text-xl">
             {displayProgress}% complete
           </p>
