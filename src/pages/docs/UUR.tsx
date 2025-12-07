@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 
 const UURDocs = () => {
   const featuredPackages = [
-    { name: "urbanshade-themes", description: "Custom theme packs for UrbanShade OS", downloads: "2.4k", stars: 48, author: "aswdBatch", version: "2.1.0" },
-    { name: "facility-sounds", description: "Ambient sound effects and alerts", downloads: "1.8k", stars: 32, author: "community", version: "1.3.2" },
-    { name: "extended-terminal", description: "Additional terminal commands and utilities", downloads: "3.1k", stars: 67, author: "defdev-team", version: "3.0.1" },
-    { name: "custom-bugchecks", description: "Create your own bugcheck screens", downloads: "890", stars: 21, author: "community", version: "1.0.5" },
-    { name: "dark-mode-plus", description: "Enhanced dark mode with OLED black", downloads: "1.5k", stars: 38, author: "themes-team", version: "1.2.0" },
-    { name: "sys-monitor-pro", description: "Advanced system monitoring widgets", downloads: "2.2k", stars: 55, author: "defdev-team", version: "2.0.0" },
+    { name: "name-here", description: "smth smth", downloads: "0", stars: 48, author: "aswdBatch", version: "0" },
+    { name: "facility-sounds", description: "lemme tink lemme tink", downloads: "0", stars: 32, author: "me again", version: "1.3.2" },
+    { name: "extended-terminal", description: "Additions", downloads: "0", stars: 67, author: "someone", version: "3.0.1" },
+    { name: "custom-bugchecks", description: "go play Pressure", downloads: "0", stars: 21, author: "yet again me", version: "1.0.5" },
+    { name: "dark-mode-plus", description: "dark", downloads: "0.0000001k", stars: 38, author: "team-name-here", version: "1.2.0" },
+    { name: "sys-monitor-pro", description: "Whats up guys my name is not markeplier, and i am a fish", downloads: "0", stars: 55, author: "defdev", version: "2.0.0" },
   ];
 
   const commands = [
@@ -65,15 +65,15 @@ const UURDocs = () => {
             <div className="flex items-center justify-center gap-4 pt-4 flex-wrap">
               <div className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg">
                 <Package className="w-4 h-4 text-cyan-400" />
-                <span className="text-sm text-slate-300">120+ Packages</span>
+                <span className="text-sm text-slate-300">prob 0 Packages</span>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg">
                 <Users className="w-4 h-4 text-green-400" />
-                <span className="text-sm text-slate-300">50+ Contributors</span>
+                <span className="text-sm text-slate-300">1 Contributors</span>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg">
                 <Download className="w-4 h-4 text-blue-400" />
-                <span className="text-sm text-slate-300">10k+ Downloads</span>
+                <span className="text-sm text-slate-300">0k+ Downloads</span>
               </div>
             </div>
             
