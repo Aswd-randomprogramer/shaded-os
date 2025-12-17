@@ -24,7 +24,13 @@ export type CommandType =
   | "MAINTENANCE"
   | "SAFE_MODE"
   | "UPDATE"
-  | "LOGOUT";
+  | "LOGOUT"
+  // Simulation triggers
+  | "TIMEOUT"
+  | "NETWORK_FAILURE"
+  | "STORAGE_FULL"
+  | "AUTH_FAILURE"
+  | "DB_ERROR";
 
 export interface QueuedCommand {
   id: string;
@@ -327,6 +333,28 @@ class CommandQueue {
   queueLogout(): string {
     return this.queue('LOGOUT', {});
   }
+
+  // === Simulation Triggers ===
+
+  queueTimeout(duration: number = 30000): string {
+    return this.queue('TIMEOUT', { duration });
+  }
+
+  queueNetworkFailure(): string {
+    return this.queue('NETWORK_FAILURE', {});
+  }
+
+  queueStorageFull(): string {
+    return this.queue('STORAGE_FULL', {});
+  }
+
+  queueAuthFailure(): string {
+    return this.queue('AUTH_FAILURE', {});
+  }
+
+  queueDbError(message: string = 'Database connection failed'): string {
+    return this.queue('DB_ERROR', { message });
+  }
 }
 
 // Singleton
@@ -389,6 +417,9 @@ export const TERMINAL_COMMANDS: Record<string, { desc: string; usage: string; ca
   
   // UUR commands
   uur: { desc: 'UrbanShade User Repository', usage: 'uur <command> [args]', category: 'uur' },
+
+  // Simulation commands
+  simulate: { desc: 'Trigger simulation events', usage: 'simulate <timeout|network|storage|auth|db>', category: 'admin' },
 };
 
 // UUR subcommands
@@ -498,49 +529,29 @@ export const UUR_AVAILABLE_PACKAGES: Record<string, {
   },
   'retro-theme': {
     name: 'Retro Theme',
-    description: 'Classic Windows-style retro theme',
+    description: 'Classic OS look and feel',
     version: '1.0.0',
-    author: 'nostalgia-dev',
+    author: 'nostalgia-team',
     category: 'themes',
-    downloads: 1100,
-    stars: 45
+    downloads: 650,
+    stars: 15
   },
-};
-
-// Available apps for apt install
-export const INSTALLABLE_APPS: Record<string, { name: string; category: string }> = {
-  terminal: { name: "Terminal", category: "system" },
-  fileexplorer: { name: "File Explorer", category: "system" },
-  calculator: { name: "Calculator", category: "utility" },
-  notepad: { name: "Notepad", category: "utility" },
-  browser: { name: "Browser", category: "utility" },
-  settings: { name: "Settings", category: "system" },
-  taskmanager: { name: "Task Manager", category: "system" },
-  paint: { name: "Paint", category: "creative" },
-  clock: { name: "Clock", category: "utility" },
-  weather: { name: "Weather", category: "utility" },
-  systemmonitor: { name: "System Monitor", category: "system" },
-  emailclient: { name: "Email Client", category: "communication" },
-  musicplayer: { name: "Music Player", category: "media" },
-  videoplayer: { name: "Video Player", category: "media" },
-  imageviewer: { name: "Image Viewer", category: "media" },
-  vpn: { name: "VPN", category: "security" },
-  firewall: { name: "Firewall", category: "security" },
-  diskmanager: { name: "Disk Manager", category: "system" },
-  registryeditor: { name: "Registry Editor", category: "system" },
-  facilitymap: { name: "Facility Map", category: "facility" },
-  securitycameras: { name: "Security Cameras", category: "facility" },
-  personneldirectory: { name: "Personnel Directory", category: "facility" },
-  containmentmonitor: { name: "Containment Monitor", category: "facility" },
-  emergencyprotocols: { name: "Emergency Protocols", category: "facility" },
-  researchnotes: { name: "Research Notes", category: "facility" },
-  incidentreports: { name: "Incident Reports", category: "facility" },
-  audiologs: { name: "Audio Logs", category: "facility" },
-  powergrid: { name: "Power Grid", category: "facility" },
-  environmentalcontrol: { name: "Environmental Control", category: "facility" },
-  databaseviewer: { name: "Database Viewer", category: "facility" },
-  networkscanner: { name: "Network Scanner", category: "security" },
-  spreadsheet: { name: "Spreadsheet", category: "utility" },
-  messages: { name: "Messages", category: "communication" },
-  instantchat: { name: "Instant Chat", category: "communication" },
+  'hello-world': {
+    name: 'Hello World',
+    description: 'A simple proof-of-concept app demonstrating the UUR system works correctly',
+    version: '1.0.0',
+    author: 'aswdBatch',
+    category: 'utility',
+    downloads: 5000,
+    stars: 100
+  },
+  'system-info': {
+    name: 'System Info',
+    description: 'Display detailed system information and diagnostics',
+    version: '1.2.0',
+    author: 'aswdBatch',
+    category: 'utility',
+    downloads: 3500,
+    stars: 75
+  }
 };

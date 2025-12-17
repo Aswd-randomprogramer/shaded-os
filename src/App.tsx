@@ -27,6 +27,7 @@ import DefDevDiagnostics from "./pages/docs/defdev/Diagnostics";
 import UURDocs from "./pages/docs/UUR";
 import Features from "./pages/docs/Features";
 import NotFound from "./pages/NotFound";
+import ModerationPanel from "./pages/ModerationPanel";
 
 // Account Manager pages
 import AccManageLayout from "./pages/acc-manage/Layout";
@@ -82,6 +83,9 @@ const App = () => (
           <Route path="devices" element={<AccManageDevices />} />
           <Route path="danger" element={<AccManageDanger />} />
         </Route>
+        
+        {/* Moderation Panel - Admin only */}
+        <Route path="/moderation" element={<ModerationPanel />} />
         
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
