@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Info, CheckCircle, ShieldCheck, Code, Github, BookOpen, FastForward, AlertTriangle, Lock, Database, Eye } from "lucide-react";
+import { Info, CheckCircle, ShieldCheck, Github, BookOpen, FastForward, AlertTriangle, Lock, Database, Eye, Cloud, Wifi } from "lucide-react";
 
 interface DisclaimerScreenProps {
   onAccept: (skipInstall?: boolean) => void;
@@ -26,7 +26,7 @@ export const DisclaimerScreen = ({ onAccept }: DisclaimerScreenProps) => {
           </p>
           <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20">
             <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="text-sm font-mono text-cyan-400">Version 2.2.0 • Simulation Active</span>
+            <span className="text-sm font-mono text-cyan-400">Version 2.8.0 • Simulation Active</span>
           </div>
         </div>
 
@@ -49,10 +49,6 @@ export const DisclaimerScreen = ({ onAccept }: DisclaimerScreenProps) => {
                         trigger "crash screens" or "bugchecks" as part of the simulation experience. However, 
                         <strong className="text-red-400"> real errors can also occur</strong>—these will be clearly labeled 
                         as "NOT A SIMULATION" and indicate actual bugs in the application code.
-                      </p>
-                      <p>
-                        <strong className="text-amber-300">Data storage:</strong> Your progress is saved in your browser's 
-                        localStorage. Clearing browser data will reset everything. Private/incognito mode won't save progress.
                       </p>
                     </>
                   )}
@@ -100,15 +96,15 @@ export const DisclaimerScreen = ({ onAccept }: DisclaimerScreenProps) => {
             </div>
           </div>
 
-          {/* Two Column Grid */}
+          {/* Two Column Grid - Account Options */}
           <div className="grid sm:grid-cols-2 gap-4">
-            {/* Data Storage Card */}
+            {/* Local Mode Card */}
             <div className="bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-xl animate-fade-in" style={{ animationDelay: "200ms" }}>
               <div className="flex items-start gap-3 mb-4">
                 <div className="flex-shrink-0 p-2.5 rounded-lg bg-purple-500/10 border border-purple-500/20">
                   <Database className="w-5 h-5 text-purple-400" />
                 </div>
-                <h3 className="text-lg font-bold text-foreground">Data Storage</h3>
+                <h3 className="text-lg font-bold text-foreground">Local Mode</h3>
               </div>
               <ul className="space-y-2.5 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
@@ -130,14 +126,44 @@ export const DisclaimerScreen = ({ onAccept }: DisclaimerScreenProps) => {
               </ul>
             </div>
 
-            {/* Privacy & Security Card */}
-            <div className="bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-xl animate-fade-in" style={{ animationDelay: "300ms" }}>
+            {/* Cloud Mode Card */}
+            <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 backdrop-blur-sm border border-cyan-500/30 rounded-2xl p-6 shadow-xl animate-fade-in" style={{ animationDelay: "300ms" }}>
               <div className="flex items-start gap-3 mb-4">
-                <div className="flex-shrink-0 p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                  <Eye className="w-5 h-5 text-amber-400" />
+                <div className="flex-shrink-0 p-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
+                  <Cloud className="w-5 h-5 text-cyan-400" />
                 </div>
-                <h3 className="text-lg font-bold text-foreground">Privacy & Security</h3>
+                <h3 className="text-lg font-bold text-foreground">Cloud Mode <span className="text-xs font-normal text-cyan-400">(Optional)</span></h3>
               </div>
+              <ul className="space-y-2.5 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 mt-0.5">•</span>
+                  <span>Sign up with <strong className="text-foreground">email &amp; password</strong></span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 mt-0.5">•</span>
+                  <span>Settings, desktop icons, and apps sync to cloud</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 mt-0.5">•</span>
+                  <span>Send <strong className="text-foreground">real messages</strong> to other users</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 mt-0.5">•</span>
+                  <span>Data stored securely via <strong className="text-foreground">Supabase</strong></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Privacy & Security Card */}
+          <div className="bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-xl animate-fade-in" style={{ animationDelay: "350ms" }}>
+            <div className="flex items-start gap-3 mb-4">
+              <div className="flex-shrink-0 p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                <Eye className="w-5 h-5 text-amber-400" />
+              </div>
+              <h3 className="text-lg font-bold text-foreground">Privacy & Security</h3>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
               <ul className="space-y-2.5 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
                   <span className="text-red-400 mt-0.5">⚠</span>
@@ -147,6 +173,8 @@ export const DisclaimerScreen = ({ onAccept }: DisclaimerScreenProps) => {
                   <span className="text-amber-400 mt-0.5">•</span>
                   <span>This is a simulation—use fake credentials only</span>
                 </li>
+              </ul>
+              <ul className="space-y-2.5 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
                   <span className="text-green-400 mt-0.5">•</span>
                   <span>No tracking, analytics, or data collection</span>
@@ -159,8 +187,23 @@ export const DisclaimerScreen = ({ onAccept }: DisclaimerScreenProps) => {
             </div>
           </div>
 
+          {/* What Gets Synced (Cloud) */}
+          <div className="bg-gradient-to-br from-blue-500/5 to-cyan-500/5 border border-blue-500/20 rounded-2xl p-5 animate-fade-in" style={{ animationDelay: "400ms" }}>
+            <div className="flex items-center gap-2 mb-3">
+              <Wifi className="w-4 h-4 text-blue-400" />
+              <h4 className="font-semibold text-sm text-blue-400">What Gets Synced (Cloud Mode Only)</h4>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {['Profile Info', 'System Settings', 'Desktop Icons', 'Installed Apps', 'Messages', 'Sync History'].map(item => (
+                <span key={item} className="px-3 py-1 rounded-full bg-blue-500/10 text-xs text-blue-300 border border-blue-500/20">
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+
           {/* Open Source Card */}
-          <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-2xl p-6 shadow-xl animate-fade-in" style={{ animationDelay: "400ms" }}>
+          <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-2xl p-6 shadow-xl animate-fade-in" style={{ animationDelay: "450ms" }}>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
               <div className="flex items-start gap-4 flex-1">
                 <div className="flex-shrink-0 p-3 rounded-xl bg-slate-800 border border-slate-700">
@@ -221,7 +264,7 @@ export const DisclaimerScreen = ({ onAccept }: DisclaimerScreenProps) => {
                   <ul className="text-sm text-muted-foreground space-y-1.5">
                     <li>• This is a fictional simulation for entertainment purposes only</li>
                     <li>• I will not enter real passwords or sensitive information</li>
-                    <li>• All my data is stored locally in my browser</li>
+                    <li>• Data is stored locally or optionally synced to cloud via Supabase</li>
                     <li>• I understand this is not a real operating system</li>
                   </ul>
                 </div>
@@ -274,7 +317,7 @@ export const DisclaimerScreen = ({ onAccept }: DisclaimerScreenProps) => {
         {/* Footer */}
         <div className="mt-6 text-center text-xs text-muted-foreground/60 space-y-1 animate-fade-in" style={{ animationDelay: "700ms" }}>
           <div>By proceeding, you acknowledge this is a simulation and agree to use it responsibly.</div>
-          <div>© 2024 UrbanShade OS Project • Not affiliated with any real organization</div>
+          <div>© 2025 UrbanShade OS Project • Not affiliated with any real organization</div>
         </div>
       </div>
     </div>

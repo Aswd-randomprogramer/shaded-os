@@ -34,34 +34,36 @@ export const ChangelogDialog = () => {
       icon: <Rocket className="w-5 h-5" />,
       color: "from-cyan-500 to-blue-600",
       tagline: "The Mass Update",
-      overview: "A massive overhaul bringing real cloud messaging, GitHub package installation, comprehensive account management with nested pages, and polished UI throughout. Send real messages to other UrbanShade users!",
+      overview: "A massive overhaul bringing real cloud messaging, admin moderation panel, contacts system, simulation triggers, and polished UI throughout. Send real messages to other UrbanShade users!",
       sections: {
         "Cloud Messaging": [
           "NEW: Real messaging system between cloud users",
-          "Send and receive messages with 750 character limit",
+          "Contacts/Favorites system - save frequent recipients",
+          "Message search through subjects and bodies",
+          "Message templates for quick replies",
           "Rate limiting: 15 messages per 5 minutes, 1 hour cooldown",
-          "Max 3 pending (unread) messages at a time",
-          "Manual refresh to check for new messages",
-          "Priority levels: Normal, High, Urgent"
+          "Max 3 pending (unread) messages at a time"
         ],
-        "Account Management": [
-          "Reorganized /acc-manage into nested routes (/general, /data, /security, /devices, /danger)",
-          "Custom profile icons using Lucide icons with color picker",
-          "Data deletion controls - delete specific data categories",
-          "Device sync history and management",
-          "Cloud login option in Settings when not signed in"
+        "Admin Moderation Panel": [
+          "NEW: /moderation route for admin-only access",
+          "Warn users with logged reasons",
+          "Temp ban (1h, 24h, 7d, 30d) or permanent ban",
+          "FAKE BAN prank feature - shows ban then reveals joke!",
+          "Full moderation action logs",
+          "Server-side admin verification via edge function"
         ],
-        "UUR Package Manager": [
-          "NEW: Import package lists from GitHub repositories",
-          "Package lists define available packages with metadata",
-          "Install packages discovered from imported lists",
-          "Real manifest validation and HTML rendering"
+        "DEF-DEV Simulation Triggers": [
+          "NEW: Fake timeout simulation",
+          "Network failure simulation",
+          "Storage full simulation",
+          "Auth failure simulation",
+          "Database error simulation"
         ],
         "Quality & Polish": [
+          "Disclaimer screen updated for cloud/local mode accuracy",
+          "Export/import contacts as JSON",
           "Changelog overview section for each version",
-          "Stable 2-minute auto-sync interval",
-          "Do Not Disturb mode for notifications",
-          "Quick Settings flyout from taskbar"
+          "Version updated to 2.8.0 throughout"
         ]
       }
     },
