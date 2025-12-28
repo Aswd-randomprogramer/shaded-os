@@ -9,6 +9,7 @@ import { AltTabSwitcher } from "./AltTabSwitcher";
 import { DesktopSwitcher } from "./DesktopSwitcher";
 import { WindowSnapIndicator } from "./WindowSnapIndicator";
 import { GlobalSearch } from "./GlobalSearch";
+import { WidgetManager } from "./widgets/WidgetManager";
 import { TaskView } from "./TaskView";
 import { actionDispatcher } from "@/lib/actionDispatcher";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -765,6 +766,12 @@ export const Desktop = ({
       }}
       onContextMenu={handleContextMenu}
     >
+      {/* Widgets Layer */}
+      <WidgetManager onOpenApp={(appId) => {
+        const app = allApps.find(a => a.id === appId);
+        if (app) openWindow(app);
+      }} />
+
       {/* Desktop Icons - Grid layout */}
       <div className="absolute inset-0 z-10 p-6 pointer-events-none">
         <div className="grid grid-cols-[repeat(auto-fill,100px)] gap-4 pointer-events-auto">
