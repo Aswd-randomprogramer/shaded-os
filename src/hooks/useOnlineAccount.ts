@@ -75,7 +75,7 @@ export const useOnlineAccount = () => {
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("profiles")
         .select("*")
         .eq("user_id", userId)
@@ -157,7 +157,7 @@ export const useOnlineAccount = () => {
     if (!user) return { error: new Error("Not signed in") };
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("profiles")
         .update({
           ...updates,
@@ -182,10 +182,10 @@ export const useOnlineAccount = () => {
 
     try {
       // Delete synced settings first
-      await supabase.from("synced_settings").delete().eq("user_id", user.id);
+      await (supabase as any).from("synced_settings").delete().eq("user_id", user.id);
       
       // Delete profile
-      await supabase.from("profiles").delete().eq("user_id", user.id);
+      await (supabase as any).from("profiles").delete().eq("user_id", user.id);
       
       // Sign out (can't delete auth user from client side)
       await signOut();
@@ -232,7 +232,7 @@ export const useOnlineAccount = () => {
         }
       }
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("synced_settings")
         .upsert({
           user_id: user.id,
@@ -257,7 +257,7 @@ export const useOnlineAccount = () => {
     if (isDevMode || !isOnlineMode || !user) return null;
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("synced_settings")
         .select("*")
         .eq("user_id", user.id)
@@ -292,7 +292,7 @@ export const useOnlineAccount = () => {
     if (isDevMode || !isOnlineMode || !user) return;
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("synced_settings")
         .select("*")
         .eq("user_id", user.id)

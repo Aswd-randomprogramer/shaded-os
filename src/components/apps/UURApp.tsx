@@ -77,7 +77,7 @@ export const UURApp = ({ onClose }: UURAppProps) => {
   const fetchCloudSubmissions = async () => {
     setLoadingSubmissions(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('uur_submissions')
         .select('*')
         .order('submitted_at', { ascending: false });
@@ -159,7 +159,7 @@ export const UURApp = ({ onClose }: UURAppProps) => {
 
     setSubmitting(true);
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('uur_submissions')
         .insert({
           package_name: submitForm.packageName,

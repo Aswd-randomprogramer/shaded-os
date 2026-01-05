@@ -39,7 +39,7 @@ export const useFriends = () => {
       }
 
       // Get all friendships where user is either user_id or friend_id
-      const { data: friendships, error } = await supabase
+      const { data: friendships, error } = await (supabase as any)
         .from('friends')
         .select('*')
         .or(`user_id.eq.${user.id},friend_id.eq.${user.id}`);
@@ -61,7 +61,7 @@ export const useFriends = () => {
       });
 
       // Fetch profiles
-      const { data: profiles } = await supabase
+      const { data: profiles } = await (supabase as any)
         .from('profiles')
         .select('user_id, username, display_name, role')
         .in('user_id', Array.from(userIds));
@@ -96,7 +96,7 @@ export const useFriends = () => {
       if (!user) return { success: false, error: 'Not authenticated' };
 
       // Check if friendship already exists
-      const { data: existing } = await supabase
+      const { data: existing } = await (supabase as any)
         .from('friends')
         .select('id')
         .or(`and(user_id.eq.${user.id},friend_id.eq.${friendId}),and(user_id.eq.${friendId},friend_id.eq.${user.id})`)
@@ -106,7 +106,7 @@ export const useFriends = () => {
         return { success: false, error: 'Friend request already exists' };
       }
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('friends')
         .insert({
           user_id: user.id,
@@ -126,7 +126,7 @@ export const useFriends = () => {
 
   const acceptFriendRequest = async (friendshipId: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('friends')
         .update({ status: 'accepted', updated_at: new Date().toISOString() })
         .eq('id', friendshipId);
@@ -143,7 +143,7 @@ export const useFriends = () => {
 
   const declineFriendRequest = async (friendshipId: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('friends')
         .delete()
         .eq('id', friendshipId);
@@ -160,7 +160,7 @@ export const useFriends = () => {
 
   const removeFriend = async (friendshipId: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('friends')
         .delete()
         .eq('id', friendshipId);

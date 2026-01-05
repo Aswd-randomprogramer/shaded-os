@@ -26,7 +26,7 @@ const SupabaseConnectivityChecker = ({ currentRoute }: SupabaseConnectivityCheck
     const connectivityCheck = async (): Promise<'online' | 'offline' | 'maintenance'> => {
       try {
         // Check site status from database
-        const { data: statusData, error: statusError } = await supabase
+        const { data: statusData, error: statusError } = await (supabase as any)
           .from('site_status')
           .select('id, status, message')
           .in('id', ['entire-site', currentRoute]);

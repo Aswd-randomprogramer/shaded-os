@@ -36,7 +36,7 @@ export const useBanCheck = () => {
       }
 
       // Check VIP status
-      const { data: vipData } = await supabase.rpc('is_vip', { _user_id: user.id });
+      const { data: vipData } = await (supabase as any).rpc('is_vip', { _user_id: user.id });
       const userIsVip = vipData === true;
       setIsVip(userIsVip);
 
@@ -45,7 +45,7 @@ export const useBanCheck = () => {
         const vipWelcomeShown = localStorage.getItem(`urbanshade_vip_welcome_${user.id}`);
         if (!vipWelcomeShown) {
           // Fetch VIP reason
-          const { data: vipRecord } = await supabase
+          const { data: vipRecord } = await (supabase as any)
             .from('vips')
             .select('reason')
             .eq('user_id', user.id)
@@ -59,7 +59,7 @@ export const useBanCheck = () => {
       }
 
       // Check for active bans
-      const { data: banData, error } = await supabase
+      const { data: banData, error } = await (supabase as any)
         .from('moderation_actions')
         .select('*')
         .eq('target_user_id', user.id)

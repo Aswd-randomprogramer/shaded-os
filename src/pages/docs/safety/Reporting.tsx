@@ -22,7 +22,7 @@ const Reporting = () => {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const { data: adminRoles, error: rolesError } = await supabase
+        const { data: adminRoles, error: rolesError } = await (supabase as any)
           .from('user_roles')
           .select('user_id')
           .eq('role', 'admin');
@@ -30,9 +30,9 @@ const Reporting = () => {
         if (rolesError) throw rolesError;
 
         if (adminRoles && adminRoles.length > 0) {
-          const adminIds = adminRoles.map(r => r.user_id);
+          const adminIds = adminRoles.map((r: any) => r.user_id);
           
-          const { data: profiles, error: profilesError } = await supabase
+          const { data: profiles, error: profilesError } = await (supabase as any)
             .from('profiles')
             .select('id, username, display_name, avatar_url')
             .in('id', adminIds);

@@ -45,7 +45,7 @@ export const NaviMonitoringTab = () => {
       // Fetch recent monitoring events
       const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
       
-      const { data: recentEvents, error } = await supabase
+      const { data: recentEvents, error } = await (supabase as any)
         .from('monitoring_events')
         .select('*')
         .gte('created_at', fiveMinAgo)

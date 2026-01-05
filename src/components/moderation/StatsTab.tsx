@@ -43,13 +43,13 @@ export const StatsTab = ({ users }: { users: UserData[] }) => {
 
         // Fetch recent moderation actions count
         const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-        const { count: recentActions } = await supabase
+        const { count: recentActions } = await (supabase as any)
           .from('moderation_actions')
           .select('*', { count: 'exact', head: true })
           .gte('created_at', sevenDaysAgo);
 
         // Fetch total bans ever
-        const { count: totalBans } = await supabase
+        const { count: totalBans } = await (supabase as any)
           .from('moderation_actions')
           .select('*', { count: 'exact', head: true })
           .in('action_type', ['ban', 'temp_ban', 'perm_ban']);

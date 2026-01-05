@@ -14,7 +14,7 @@ const SupabaseTab = () => {
 
   const checkConnection = async () => {
     try {
-      const { error } = await supabase.from('site_status').select('id').limit(1);
+      const { error } = await (supabase as any).from('site_status').select('id').limit(1);
       setConnected(!error);
     } catch { setConnected(false); }
   };

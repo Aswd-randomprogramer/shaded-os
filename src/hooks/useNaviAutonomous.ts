@@ -142,7 +142,7 @@ export const useNaviAutonomous = () => {
     try {
       const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
       
-      const { data: events, error } = await supabase
+      const { data: events, error } = await (supabase as any)
         .from('monitoring_events')
         .select('*')
         .gte('created_at', fiveMinAgo);
@@ -150,10 +150,10 @@ export const useNaviAutonomous = () => {
       if (error) throw error;
 
       const newStats: NaviStats = {
-        signupsLast5Min: events?.filter(e => e.event_type === 'signup').length || 0,
-        messagesLast5Min: events?.filter(e => e.event_type === 'message').length || 0,
-        failedLogins: events?.filter(e => e.event_type === 'failed_login').length || 0,
-        activeUsers: new Set(events?.map(e => e.user_id).filter(Boolean)).size
+        signupsLast5Min: events?.filter((e: any) => e.event_type === 'signup').length || 0,
+        messagesLast5Min: events?.filter((e: any) => e.event_type === 'message').length || 0,
+        failedLogins: events?.filter((e: any) => e.event_type === 'failed_login').length || 0,
+        activeUsers: new Set(events?.map((e: any) => e.user_id).filter(Boolean)).size
       };
 
       setStats(newStats);

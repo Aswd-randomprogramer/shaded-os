@@ -44,7 +44,7 @@ export const useMessages = () => {
       }
 
       // Fetch received messages
-      const { data: receivedMessages, error } = await supabase
+      const { data: receivedMessages, error } = await (supabase as any)
         .from('messages')
         .select('*')
         .eq('recipient_id', user.id)
@@ -53,18 +53,18 @@ export const useMessages = () => {
       if (error) throw error;
 
       // Fetch sender profiles for each message
-      const senderIds = [...new Set(receivedMessages?.map(m => m.sender_id) || [])];
+      const senderIds = [...new Set(receivedMessages?.map((m: any) => m.sender_id) || [])];
       let profiles: Record<string, { username: string; display_name: string | null; role?: string; is_vip?: boolean }> = {};
       
       if (senderIds.length > 0) {
-        const { data: profilesData } = await supabase
+        const { data: profilesData } = await (supabase as any)
           .from('profiles')
           .select('user_id, username, display_name, role')
           .in('user_id', senderIds);
         
         // Check VIP status for each sender
         for (const p of profilesData || []) {
-          const { data: isVipResult } = await supabase.rpc('is_vip', { _user_id: p.user_id });
+          const { data: isVipResult } = await (supabase as any).rpc('is_vip', { _user_id: p.user_id });
           profiles[p.user_id] = { 
             username: p.username, 
             display_name: p.display_name, 
@@ -74,7 +74,7 @@ export const useMessages = () => {
         }
       }
 
-      const messagesWithProfiles = (receivedMessages || []).map(m => ({
+      const messagesWithProfiles = (receivedMessages || []).map((m: any) => ({
         ...m,
         priority: m.priority as 'normal' | 'high' | 'urgent',
         sender_profile: profiles[m.sender_id]
@@ -83,7 +83,7 @@ export const useMessages = () => {
       setMessages(messagesWithProfiles);
 
       // Count pending (sent but unread) messages
-      const { count } = await supabase
+      const { count } = await (supabase as any)
         .from('messages')
         .select('*', { count: 'exact', head: true })
         .eq('sender_id', user.id)
@@ -92,7 +92,7 @@ export const useMessages = () => {
       setPendingCount(count || 0);
 
       // Check if rate limited
-      const { data: rateLimit } = await supabase
+      const { data: rateLimit } = await (supabase as any)
         .from('message_rate_limits')
         .select('blocked_until')
         .eq('user_id', user.id)
@@ -120,7 +120,7 @@ export const useMessages = () => {
       if (!user) return;
 
       // Now that RLS allows authenticated users to view profiles, this should work
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('profiles')
         .select('id, user_id, username, display_name')
         .neq('user_id', user.id)
@@ -147,7 +147,7 @@ export const useMessages = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return { success: false, error: 'Not authenticated' };
       
-      const { data: profile } = await supabase
+      const { data: profile } = await (supabase as any)
         .from('profiles')
         .select('username')
         .eq('user_id', user.id)
@@ -157,7 +157,7 @@ export const useMessages = () => {
       
       // If Aswd, send directly without rate limit check
       if (isAswd) {
-        const { error: insertError } = await supabase
+        const { error: insertError } = await (supabase as any)
           .from('messages')
           .insert({
             sender_id: user.id,
@@ -172,7 +172,7 @@ export const useMessages = () => {
       }
       
       // For everyone else, use rate-limited function
-      const { data, error } = await supabase.rpc('check_and_send_message', {
+      const { data, error } = await (supabase as any).rpc('check_and_send_message', {
         p_recipient_id: recipientId,
         p_subject: subject,
         p_body: body,
@@ -193,7 +193,7 @@ export const useMessages = () => {
       }
 
       // Refresh pending count (user already fetched above)
-      const { count } = await supabase
+      const { count } = await (supabase as any)
         .from('messages')
         .select('*', { count: 'exact', head: true })
         .eq('sender_id', user.id)
@@ -209,7 +209,7 @@ export const useMessages = () => {
 
   const markAsRead = useCallback(async (messageId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('messages')
         .update({ read_at: new Date().toISOString() })
         .eq('id', messageId);
@@ -226,7 +226,7 @@ export const useMessages = () => {
 
   const deleteMessage = useCallback(async (messageId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('messages')
         .delete()
         .eq('id', messageId);

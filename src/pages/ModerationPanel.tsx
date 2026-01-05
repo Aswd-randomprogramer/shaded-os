@@ -627,7 +627,7 @@ const ModerationPanel = () => {
   const fetchStatuses = async () => {
     setStatusLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('site_status')
         .select('id, status, message')
         .order('id');
@@ -644,7 +644,7 @@ const ModerationPanel = () => {
 
   const updateStatus = async (id: string, status: string, message: string | null) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('site_status')
         .update({ status, message, updated_at: new Date().toISOString() })
         .eq('id', id);
