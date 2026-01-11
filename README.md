@@ -1,8 +1,8 @@
-## Urbanshade OS reaches 300 commits!
-While this may not seem like a big thing, it is big for me!
+## Urbanshade OS reaches 400 commits!
+This is a big thing, and im very happy for this!
 
-Thank you to everyone who has, does, and will
-support Urbanshade OS! Im very thankful!
+Im very excited when i'll release V3.0!
+Im very thankful for everyone who helps!
 # Welcome to the Urbanshade OS (website)!
 ---
 ## Quick viewable status:
