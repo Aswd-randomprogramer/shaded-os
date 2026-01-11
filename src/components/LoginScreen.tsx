@@ -27,7 +27,6 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
   useEffect(() => {
     const loadedAccounts: UserAccount[] = [];
     
-    // Load admin account
     const adminData = localStorage.getItem("urbanshade_admin");
     if (adminData) {
       const admin = JSON.parse(adminData);
@@ -42,7 +41,6 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
       });
     }
     
-    // Load additional accounts
     const additionalAccounts = localStorage.getItem("urbanshade_accounts");
     if (additionalAccounts) {
       const parsed = JSON.parse(additionalAccounts);
@@ -62,7 +60,6 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
     setAccounts(loadedAccounts);
   }, []);
 
-  // Update time every second
   useEffect(() => {
     const interval = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(interval);
@@ -139,89 +136,85 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col bg-slate-900 relative overflow-hidden">
-      {/* Subtle background gradient */}
+    <div className="h-screen w-full bg-slate-900 relative overflow-hidden">
+      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
       
-      {/* Main content - centered */}
-      <div className="flex-1 flex items-center justify-center relative z-10">
-        {!selectedAccount ? (
-          // User selection panel
-          <div className="w-full max-w-lg mx-4">
-            <div className="rounded-2xl border border-cyan-500/30 bg-slate-800/50 backdrop-blur-sm p-6">
-              {/* Header */}
-              <div className="flex items-center gap-3 mb-6">
-                <Lock className="w-5 h-5 text-cyan-400" />
-                <span className="text-cyan-400 font-mono tracking-wider text-sm">SELECT USER</span>
-              </div>
-              
-              {/* User tiles */}
-              <div className="space-y-3">
-                {accounts.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <User className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>No accounts configured</p>
-                  </div>
+      {/* Account tiles - TOP LEFT */}
+      <div className="absolute top-6 left-6 z-10">
+        <div className="flex items-center gap-2 text-cyan-400 text-xs font-mono mb-3">
+          <Lock className="w-4 h-4" />
+          <span>SELECT USER</span>
+        </div>
+        
+        <div className="space-y-2">
+          {accounts.map((account) => (
+            <button
+              key={account.id}
+              onClick={() => handleSelectAccount(account)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border text-left w-56 ${
+                selectedAccount?.id === account.id
+                  ? "bg-cyan-500/20 border-cyan-500/50"
+                  : "bg-slate-800/60 border-slate-700/50 hover:bg-slate-700/60 hover:border-slate-600"
+              }`}
+            >
+              <div className="w-9 h-9 rounded-full bg-cyan-900/50 border border-cyan-500/30 flex items-center justify-center flex-shrink-0">
+                {account.isAdmin ? (
+                  <Shield className="w-4 h-4 text-cyan-400" />
                 ) : (
-                  accounts.map((account) => (
-                    <button
-                      key={account.id}
-                      onClick={() => handleSelectAccount(account)}
-                      className="w-full flex items-center gap-4 p-4 rounded-xl bg-slate-700/50 border border-slate-600/50 hover:bg-slate-700 hover:border-cyan-500/30 transition-colors text-left group"
-                    >
-                      {/* Avatar */}
-                      <div className="w-14 h-14 rounded-full bg-cyan-900/50 border border-cyan-500/30 flex items-center justify-center flex-shrink-0">
-                        {account.isAdmin ? (
-                          <Shield className="w-7 h-7 text-cyan-400" />
-                        ) : (
-                          <User className="w-7 h-7 text-cyan-400" />
-                        )}
-                      </div>
-                      
-                      {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <div className="text-lg font-semibold text-foreground">
-                          {account.displayName}
-                          {account.isAdmin && <span className="text-muted-foreground ml-1">(Admin)</span>}
-                        </div>
-                        <div className="text-sm text-muted-foreground">{account.role}</div>
-                        <div className="text-sm text-cyan-400 font-mono">Clearance Level {account.clearance}</div>
-                      </div>
-                      
-                      {/* Chevron */}
-                      <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-cyan-400 flex-shrink-0" />
-                    </button>
-                  ))
+                  <User className="w-4 h-4 text-cyan-400" />
                 )}
               </div>
-            </div>
+              
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium text-foreground truncate">
+                  {account.displayName}
+                </div>
+                <div className="text-xs text-muted-foreground truncate">{account.role}</div>
+              </div>
+              
+              <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* CENTER - Either message or password form */}
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        {!selectedAccount ? (
+          // No account selected - show message
+          <div className="text-center">
+            <User className="w-16 h-16 mx-auto mb-4 text-muted-foreground/30" />
+            <p className="text-xl text-muted-foreground/60">
+              Select an account to log in to
+            </p>
           </div>
         ) : (
-          // Password entry panel
-          <div className="w-full max-w-md mx-4">
-            <div className="rounded-2xl border border-cyan-500/30 bg-slate-800/50 backdrop-blur-sm p-6">
+          // Account selected - show password form
+          <div className="w-full max-w-sm mx-4">
+            <div className="rounded-xl border border-cyan-500/30 bg-slate-800/70 backdrop-blur-sm p-6">
               {/* Back button */}
               <button
                 onClick={handleBack}
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-cyan-400 mb-6"
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-cyan-400 mb-5"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Back to users
+                Back
               </button>
               
-              {/* Selected user info */}
-              <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-600/50">
-                <div className="w-16 h-16 rounded-full bg-cyan-900/50 border border-cyan-500/30 flex items-center justify-center">
+              {/* User info */}
+              <div className="flex items-center gap-4 mb-5 pb-5 border-b border-slate-600/50">
+                <div className="w-14 h-14 rounded-full bg-cyan-900/50 border border-cyan-500/30 flex items-center justify-center">
                   {selectedAccount.isAdmin ? (
-                    <Shield className="w-8 h-8 text-cyan-400" />
+                    <Shield className="w-7 h-7 text-cyan-400" />
                   ) : (
-                    <User className="w-8 h-8 text-cyan-400" />
+                    <User className="w-7 h-7 text-cyan-400" />
                   )}
                 </div>
                 <div>
-                  <div className="text-xl font-semibold text-foreground">{selectedAccount.displayName}</div>
+                  <div className="text-lg font-semibold text-foreground">{selectedAccount.displayName}</div>
                   <div className="text-sm text-muted-foreground">{selectedAccount.role}</div>
-                  <div className="text-sm text-cyan-400 font-mono">Clearance Level {selectedAccount.clearance}</div>
+                  <div className="text-xs text-cyan-400 font-mono">Clearance Level {selectedAccount.clearance}</div>
                 </div>
               </div>
               
@@ -229,7 +222,6 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
               {selectedAccount.hasPassword ? (
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div>
-                    <label className="text-sm text-muted-foreground mb-2 block">Password</label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <input
@@ -239,7 +231,7 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
                         placeholder="Enter password"
                         autoFocus
                         disabled={loading}
-                        className="w-full pl-10 pr-4 py-3 rounded-lg bg-slate-700/50 border border-slate-600/50 text-foreground placeholder:text-muted-foreground/50 focus:border-cyan-500/50 focus:outline-none"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-slate-700/50 border border-slate-600/50 text-foreground placeholder:text-muted-foreground/50 focus:border-cyan-500/50 focus:outline-none text-sm"
                       />
                     </div>
                   </div>
@@ -253,7 +245,7 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 font-medium hover:bg-cyan-500/30 disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="w-full py-2.5 rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 font-medium hover:bg-cyan-500/30 disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
                   >
                     {loading ? (
                       <>
@@ -268,13 +260,13 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
               ) : (
                 <div className="space-y-4">
                   <p className="text-sm text-muted-foreground text-center">
-                    No password required for this account
+                    No password required
                   </p>
                   
                   <button
                     onClick={handleLogin}
                     disabled={loading}
-                    className="w-full py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 font-medium hover:bg-cyan-500/30 disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="w-full py-2.5 rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 font-medium hover:bg-cyan-500/30 disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
                   >
                     {loading ? (
                       <>
@@ -292,19 +284,19 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
         )}
       </div>
 
-      {/* Time display - bottom right */}
-      <div className="absolute bottom-8 right-8 text-right z-10">
-        <div className="text-5xl font-light text-foreground/80 tracking-tight">
+      {/* Time - bottom right */}
+      <div className="absolute bottom-6 right-6 text-right z-10">
+        <div className="text-4xl font-light text-foreground/80">
           {formatTime(time)}
         </div>
-        <div className="text-lg text-muted-foreground mt-1">
+        <div className="text-sm text-muted-foreground">
           {formatDate(time)}
         </div>
       </div>
 
       {/* System info - bottom left */}
-      <div className="absolute bottom-8 left-8 text-left z-10">
-        <div className="text-sm font-medium text-foreground/80">UrbanShade OS</div>
+      <div className="absolute bottom-6 left-6 z-10">
+        <div className="text-sm font-medium text-foreground/70">UrbanShade OS</div>
         <div className="text-xs text-muted-foreground">v3.1 Deep Ocean</div>
       </div>
     </div>
